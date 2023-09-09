@@ -1,31 +1,33 @@
-const express = require('express');
-const crypto = require('crypto');
+const { MongoClient } = require("mongodb");
 
-const app = express();
+const username = encodeURIComponent("himanshusoni221000");
+const password = encodeURIComponent("Test1234");
+const cluster = "cluster0.t2on10k.mongodb.net";
+const authSource = "admin";
+const authMechanism = "SCRAM";
 
+const uri = `mongodb+srv://${username}:${password}@${cluster}/?authSource=${authSource}&authMechanism=${authMechanism}&ssl=true&tlsInsecure=true`;
 
-// API endpoint to generate Zoom signature
-app.post('/zoom/signature', (req, res) => {
-    const apiKey = U0QLmVvOS0yWpFPgfkDkA;
-    const apiSecret = Aho6syKXNq6Y930uz2NPYLYBqBmTnVf3;
-    const timestamp = new Date().getTime();
-    const meetingNumber = req.body.meetingNumber;
-    const role = req.body.role;
-  
-    // Generate the Zoom signature
-    const signature = crypto
-      .createHmac('sha256', apiSecret)
-      .update(`${apiKey}${meetingNumber}${timestamp}${role}`)
-      .digest('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-  
-    res.json({ signature });
-  });
-  
-
-// Start the server
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  tls: true
 });
+
+
+async function run() {
+  try {
+    await client.connect();
+
+    const database = client.db("H1s1");
+    const patients = database.collection("patients");
+
+    const cursor = patients.find();
+
+    await cursor.forEach((doc) => console.dir(doc));
+  } finally {
+    await client.close();
+  }
+}
+
+run().catch(console.dir);

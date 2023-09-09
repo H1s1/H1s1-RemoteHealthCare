@@ -149,3 +149,11 @@ form textarea {
     border-radius: 50%;
     right: 30px;
   }
+
+  .VideoBox{
+    width: 80%; /* Adjust the width as needed */
+    max-width: 800px; /* Set a maximum width if desired */
+    margin: 0 auto; /* Center the box horizontally */
+    border: 2px solid #ccc; /* Optional border for visual distinction */
+    padding: 20px; /* Optional padding for spacing around the box */
+  }
